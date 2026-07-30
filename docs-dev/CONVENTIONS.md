@@ -16,7 +16,7 @@ insTools/
 │   │   ├── *.js   ← 共享库
 │   └── css/
 ├── workers/       ← Cloudflare Workers API
-├── plans/         ← 项目计划文件
+├── docs-dev/      ← 开发者文档
 ├── AGENTS.md      ← AI 代理指令（自动加载）
 ├── README.md      ← 项目说明
 └── .github/

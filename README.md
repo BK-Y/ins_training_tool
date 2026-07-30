@@ -33,7 +33,7 @@ insTools/
 ├── _routes.json                   # Cloudflare Pages 路由规则
 ├── wrangler.toml                  # Cloudflare 部署配置
 ├── AGENTS.md                     # AI 代理项目指令（自动加载）
-├── plans/                        # 项目计划、约定、决策记录
+├── docs-dev/                     # 开发者文档（进度、约定、架构）
 └── README.md
 ```
 
