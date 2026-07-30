@@ -1,0 +1,11 @@
+# Security & Cache Headers for Cloudflare Pages
+
+/src/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Allow cross-origin for display page embedding (optional)
+# /src/pages/display.html
+#   X-Frame-Options: SAMEORIGIN

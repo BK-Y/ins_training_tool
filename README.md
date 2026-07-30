@@ -68,6 +68,66 @@ src/
 
 详见 `docs-dev/ROADMAP.md`。
 
+---
+
+## ⚙️ Cloudflare Pages 配置说明
+
+项目根目录包含三个 Cloudflare Pages 配置文件，仅 Cloudflare 读取，不影响 GitHub Pages。
+
+### `_headers` — HTTP 响应头
+
+```txt
+/src/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+```
+
+| 参数 | 作用 | 修改影响 |
+|------|------|---------|
+| `X-Content-Type-Options: nosniff` | 防止 MIME 类型嗅探攻击 | 基本安全配置，建议保留 |
+| `X-Frame-Options: DENY` | 禁止页面被嵌入 iframe（防点击劫持） | 如需在 iframe 中嵌入展示页，改为 `SAMEORIGIN` |
+| `Referrer-Policy` | 控制 HTTP Referer 头的发送范围 | 隐私相关，一般无需修改 |
+| `Permissions-Policy` | 限制浏览器 API 权限（摄像头/麦克风等） | 根据需求调整 |
+
+### `_routes.json` — 路由规则
+
+```json
+{ "version": 1, "include": ["/*"], "exclude": [] }
+```
+
+| 参数 | 说明 | 修改场景 |
+|------|------|---------|
+| `include: ["/*"]` | 所有请求由 Pages 处理 | 默认配置 |
+| `exclude: []` | 排除的路径 | Workers 上线后，将 `/api/*` 加入 `exclude` 并指向 Worker |
+
+后期加入 Workers API 后，配置会变为：
+
+```json
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": ["/api/*"]
+}
+```
+
+然后在 Cloudflare Dashboard 中创建 Workers 路由 `/api/*` → 你的 Worker。
+
+### `wrangler.toml` — 构建配置
+
+```toml
+name = "ins-tools"
+compatibility_date = "2026-07-30"
+pages_build_output_dir = "src"
+```
+
+| 参数 | 说明 | 修改场景 |
+|------|------|---------|
+| `name` | Cloudflare Pages 项目名称 | 在 Dashboard 创建项目时需保持一致 |
+| `compatibility_date` | Workers 运行时兼容性日期 | 更新 SDK 时同步更新 |
+| `pages_build_output_dir` | 部署的目录路径 | 如需部署整个仓库根目录，改为 `"."` |
+
 ### 规划中：Cloudflare Pages + Workers + D1
 
 正在逐步迁移到 Cloudflare 架构，以实现：
