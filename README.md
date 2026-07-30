@@ -1,6 +1,7 @@
 # MakeX Inspire 成绩统计系统 (STS)
 
 > **S**tudent **T**racking **S**ystem — MakeX Inspire 赛事成绩统计与管理平台。
+>
 
 ---
 
@@ -207,6 +208,7 @@ pages_build_output_dir = "src"
 每轮比赛中，每名学员获得一个**得分**和一个**用时**。
 
 ### 排名规则
+
 #### 第一条：最终成绩
 
 **最终成绩 = 各任务最佳成绩之和**
