@@ -10,7 +10,16 @@
 
 统一数据访问接口，支持可插拔存储后端。应用层通过统一接口访问数据，不关心底层是 localStorage 还是云端 API。
 
-### 适配器接口
+### 存储方案演进
+
+| 阶段 | 本地存储 | 云端存储 | 说明 |
+|------|---------|---------|------|
+| 当前 | **localStorage** ⏳ 过渡方案 | — | 前期快速实现，容量有限（5MB），同步读写 |
+| 短期 | **IndexedDB (STS_DB)** ✅ 目标 | — | 容量大（>50MB），支持异步/事务/索引 |
+| 中期 | IndexedDB | Cloudflare Workers + D1 | 双模：未登录用 IDB，登录后走 API |
+| 长期 | IndexedDB | 可切换（CF / 自定义 API） | StorageAdapter 多后端 |
+
+> **localStorage 仅作为前期过渡方案。** 后续本地存储将全面转向 IndexedDB（STS_DB），利用其更大容量、异步 API 和索引查询能力。`LocalStorageAdapter` 仅用于兼容旧数据迁移。\n\n### 适配器接口
 
 ```javascript
 class StorageAdapter {
