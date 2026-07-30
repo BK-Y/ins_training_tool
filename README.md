@@ -4,50 +4,68 @@
 
 ---
 
-## 📁 项目结构
+## 📁 目录说明
 
 ```
 insTools/
-├── docs/                          # ← 前端静态文件（GitHub Pages 发布目录）
-│   ├── index.html                 #   入口页（自动跳转到 stats.html）
-│   ├── stats.html                 #   成绩统计（主页面）
-│   ├── training.html              #   集训管理
-│   ├── tasks.html                 #   任务管理
-│   ├── admin.html                 #   教务管理（班级 + 学员）
-│   ├── display.html               #   成绩展示（大屏模式）
-│   ├── shared.js                  #   通用数据层 & 工具函数
-│   ├── shared_indexdb.js          #   IndexedDB 存储层
-│   ├── analysis.js                #   统计分析函数
-│   ├── schedule.js                #   赛程模块
-│   ├── header.js                  #   导航栏 & 侧边栏组件
-│   ├── style.css                  #   全局样式
-│   ├── apps/                      #   页面业务逻辑（从 HTML 中拆分）
-│   │   ├── stats.js
-│   │   ├── training.js
-│   │   ├── tasks.js
-│   │   └── admin.js
-│   └── tools/
-│       └── db-manager.html        #   STS_DB 开发者工具
-├── workers/                       # Cloudflare Workers API（开发中）
-├── _headers                       # Cloudflare Pages 安全/缓存头配置
-├── _routes.json                   # Cloudflare Pages 路由规则
-├── wrangler.toml                  # Cloudflare 部署配置
-├── AGENTS.md                     # AI 代理项目指令（自动加载）
-├── docs-dev/                     # 开发者文档（进度、约定、架构）
-└── README.md
+├── docs/          前端静态文件（GitHub Pages 过渡方案）
+├── src/           Cloudflare Pages 源代码（正式部署目标）
+├── docs-dev/      开发者文档（进度、约定、架构、决策）
+├── workers/       Cloudflare Workers API（开发中）
+├── AGENTS.md      AI 代理指令（自动加载）
+└── _headers       Cloudflare Pages 配置
+    _routes.json
 ```
+
+### `docs/` — 前期过渡方案
+
+`docs/` 是 GitHub Pages 发布目录，作为 Cloudflare 迁移完成前的临时静态部署方案。
+迁移验证通过后，将完全切换到 Cloudflare Pages，`docs/` 可停用或保留为备用。
+
+### `src/` — Cloudflare Pages 源代码
+
+正式部署目标，完整项目结构位于此目录：
+
+```
+src/
+├── pages/         HTML 页面（index.html 为首页）
+├── js/
+│   ├── apps/      页面业务逻辑（stats / training / tasks / admin）
+│   ├── shared.js  通用数据层
+│   ├── header.js  导航组件
+│   └── ...
+├── css/           全局样式
+└── tools/         开发者工具
+```
+
+### `docs-dev/` — 开发者文档
+
+项目开发进度和规范均记录在此目录，每次会话前读取对应文件了解当前状态。
+
+| 文件 | 内容 |
+|------|------|
+| `ROADMAP.md` | 路线图 — 各阶段进度和待办任务 |
+| `CHANGELOG.md` | 变更日志 — 已完成的功能记录 |
+| `ISSUES.md` | 已知问题 — Bug 和改进建议 |
+| `CONVENTIONS.md` | 项目约定 — 目录结构、命名规则、模块依赖 |
+| `ARCHITECTURE.md` | 架构设计 — StorageAdapter 等核心设计 |
+| `DECISIONS.md` | 决策记录 — 重要决策及其理由 |
 
 ---
 
-## 🚀 部署方式
+## 🚀 部署计划
 
-### 当前：GitHub Pages（静态前端）
+### 当前：GitHub Pages（过渡期）
 
 项目前端文件位于 `docs/` 目录，已配置为 GitHub Pages 发布目录。
 
 **访问地址**：`https://BK-Y.github.io/ins_training_tool/`
 
-> 如需在自己的仓库启用，进入 Settings → Pages → Source: **Deploy from branch** → `main` → `/docs`
+> 启用方式：Settings → Pages → Source: **Deploy from branch** → `main` → `/docs`
+
+### 目标：Cloudflare Pages + Workers + D1
+
+详见 `docs-dev/ROADMAP.md`。
 
 ### 规划中：Cloudflare Pages + Workers + D1
 
