@@ -108,25 +108,6 @@ GitHub 仓库 → Actions 标签页 → 点击最新运行 → 查看部署日�
 - GitHub Actions → 选择之前的成功运行 → **Re-run job**
 - 或 Cloudflare Dashboard → Pages → `ins-tools` → **Deployments** → 选择版本部署
 
-#### 部署状态查看
-
-```
-GitHub 仓库 → Actions 标签页
-  ↓
-点击最新 workflow 运行
-  ↓
-查看部署日志
-  ↓
-成功后访问 https://ins-tools.pages.dev/
-```
-
-#### 回滚
-
-如需回滚到上一版本：
-
-- GitHub Actions → 选择之前的成功运行 → **Re-run job**
-- 或 Cloudflare Dashboard → Pages → `ins-tools` → **Deployments** → 选择版本部署
-
 ---
 
 #### ⚙️ Cloudflare Pages 配置说明
