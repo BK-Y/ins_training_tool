@@ -1,6 +1,66 @@
-# MakeX Inspire 成绩统计系统
+# MakeX Inspire 成绩统计系统 (STS)
 
-## 排名规则
+> **S**tudent **T**racking **S**ystem — MakeX Inspire 赛事成绩统计与管理平台。
+
+---
+
+## 📁 项目结构
+
+```
+insTools/
+├── docs/                          # ← 前端静态文件（GitHub Pages 发布目录）
+│   ├── index.html                 #   入口页（自动跳转到 stats.html）
+│   ├── stats.html                 #   成绩统计（主页面）
+│   ├── training.html              #   集训管理
+│   ├── tasks.html                 #   任务管理
+│   ├── admin.html                 #   教务管理（班级 + 学员）
+│   ├── display.html               #   成绩展示（大屏模式）
+│   ├── shared.js                  #   通用数据层 & 工具函数
+│   ├── shared_indexdb.js          #   IndexedDB 存储层
+│   ├── analysis.js                #   统计分析函数
+│   ├── schedule.js                #   赛程模块
+│   ├── header.js                  #   导航栏 & 侧边栏组件
+│   ├── style.css                  #   全局样式
+│   ├── apps/                      #   页面业务逻辑（从 HTML 中拆分）
+│   │   ├── stats.js
+│   │   ├── training.js
+│   │   ├── tasks.js
+│   │   └── admin.js
+│   └── tools/
+│       └── db-manager.html        #   STS_DB 开发者工具
+├── workers/                       # Cloudflare Workers API（开发中）
+├── _headers                       # Cloudflare Pages 安全/缓存头配置
+├── _routes.json                   # Cloudflare Pages 路由规则
+├── wrangler.toml                  # Cloudflare 部署配置
+├── ARCHITECTURE-PLAN.md           # 架构演进计划（CF Workers + D1）
+└── README.md
+```
+
+---
+
+## 🚀 部署方式
+
+### 当前：GitHub Pages（静态前端）
+
+项目前端文件位于 `docs/` 目录，已配置为 GitHub Pages 发布目录。
+
+**访问地址**：`https://BK-Y.github.io/ins_training_tool/`
+
+> 如需在自己的仓库启用，进入 Settings → Pages → Source: **Deploy from branch** → `main` → `/docs`
+
+### 规划中：Cloudflare Pages + Workers + D1
+
+正在逐步迁移到 Cloudflare 架构，以实现：
+- **Cloudflare Pages** — 托管前端静态文件
+- **Cloudflare Workers** — REST API 后端（认证、CRUD、数据同步）
+- **Cloudflare D1** — SQLite 数据库（用户、班级、学员、任务、成绩等）
+- **JWT 认证** — 多角色权限管理（admin / coach / student）
+
+详见 [`ARCHITECTURE-PLAN.md`](ARCHITECTURE-PLAN.md)。
+
+---
+
+## 📊 排名规则
 
 ### 基本概念
 
@@ -52,27 +112,24 @@
 
 ---
 
-*系统版本: 2026-07-17*
-
-## 系统命名
-
-| 缩写 | 全称 |
-|------|------|
-| **STS** | **S**tudent **T**racking **S**ystem |
-
-## STS_DB 数据库结构
+## 🗄️ STS_DB 数据库结构
 
 IndexedDB 数据库 `STS_DB` 包含以下表：
 
 | 表名 | 主键 | 索引 | 状态 |
 |------|------|------|------|
-| `groups` | `id` | `by_name` (unique) | ✅ 已就绪 |
-| `students` | `id` | `by_group` | ✅ 已就绪 |
+| `classes` | `id` | — | ✅ 已就绪 |
+| `students` | `id` | — | ✅ 已就绪 |
+| `enrollments` | `id` | `by_student`, `by_class`, `by_status` | ✅ 已就绪 |
 
 ### 存储层次
 
 | 层 | 引擎 | 键名 | 数据范围 |
 |----|------|------|---------|
-| 主存储 | localStorage | `makexScoreData` | 全部数据（始终保留，永不删除） |
-| 持久存储 | IndexedDB | `STS_DB` | students + groups（可选切换） |
+| 主存储 | localStorage | `makexScoreData` | 全部数据（始终保留） |
+| 持久存储 | IndexedDB | `STS_DB` | students + classes + enrollments（可选切换） |
 | 文件备份 | JSON 下载 | `makex_backup_*.json` | 全部数据（用户手动导出） |
+
+---
+
+*系统版本: 2026-07-30*
