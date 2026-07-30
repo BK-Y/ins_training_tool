@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>教务管理 - MakeX Inspire 成绩统计系统</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+    <script src="../js/shared.js"></script>
+    <script src="../js/shared_indexdb.js"></script>
+    <script src="../js/header.js"></script>
+
+    <div class="container">
+        <!-- 存储引擎选择 -->
+        <div class="card" id="storageEngineCard" style="margin-bottom:1rem;">
+            <div class="card-header" style="margin-bottom:0;">
+                <span class="card-title">💾 数据存储</span>
+                <span id="engineStatus" style="font-size:0.82rem;font-weight:400;color:var(--gray-500);">🔍 检测中...</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;padding-top:0.25rem;">
+                <label style="display:inline-flex;align-items:center;gap:0.3rem;cursor:pointer;font-size:0.88rem;">
+                    <input type="radio" name="storageEngine" value="ls" checked style="accent-color:var(--primary);">
+                    📦 localStorage
+                </label>
+                <label style="display:inline-flex;align-items:center;gap:0.3rem;cursor:pointer;font-size:0.88rem;">
+                    <input type="radio" name="storageEngine" value="idb" disabled style="accent-color:var(--primary);">
+                    🗄️ IndexedDB (STS_DB)
+                </label>
+                <button class="btn btn-outline btn-sm" id="verifyIDBBtn">🔬 验证并写入 STS_DB</button>
+                <button class="btn btn-outline btn-sm" id="switchToLSBtn" style="display:none;">🔙 切回 localStorage</button>
+            </div>
+            <div id="idbVerifyLog" style="margin-top:0.5rem;font-size:0.82rem;background:#f8fafc;padding:0.5rem 0.75rem;border-radius:6px;font-family:monospace;white-space:pre-wrap;display:none;line-height:1.6;"></div>
+        </div>
+
+        <!-- 班级管理 -->
+        <div id="section-classes">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">🏫 新增班级</span>
+                </div>
+                <div class="form-row">
+                    <input type="text" id="groupNameInput" class="input-full" placeholder="输入班级名称" maxlength="20" autocomplete="off" />
+                    <button class="btn btn-primary" id="addGroupBtn">➕ 添加班级</button>
+                </div>
+                <div id="groupList" style="margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.4rem;"></div>
+            </div>
+        </div>
+
+        <!-- 学员管理 -->
+        <div id="section-students" style="display:none;">
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">👤 新增学员</span>
+                </div>
+                <div class="form-row">
+                    <input type="text" id="studentNameInput" class="input-full" placeholder="输入学员姓名" maxlength="20" autocomplete="off" />
+                    <button class="btn btn-primary" id="addStudentBtn">➕ 添加</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">📋 全部学员 (<span id="studentCount">0</span>)</span>
+                </div>
+                <div id="studentList" class="student-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 编辑学员 -->
+    <div class="modal-overlay" id="editStudentModal">
+        <div class="modal-box" style="max-width:400px;">
+            <h3 id="editStudentModalTitle">✏️ 编辑学员</h3>
+            <div class="form-group">
+                <label>学员姓名</label>
+                <input type="text" id="editStudentNameInput" class="input-full" maxlength="20" />
+            </div>
+            <div class="form-group">
+                <label>所属班级</label>
+                <select id="editStudentGroupSelect" style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;background:#fff;color:var(--gray-800);">
+                    <option value="">不分组</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="editStudentModalCancel">取消</button>
+                <button class="btn btn-primary" id="editStudentModalConfirm">确认保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../js/apps/admin.js"></script>
+</body>
+</html>

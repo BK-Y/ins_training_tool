@@ -32,7 +32,8 @@ insTools/
 ├── _headers                       # Cloudflare Pages 安全/缓存头配置
 ├── _routes.json                   # Cloudflare Pages 路由规则
 ├── wrangler.toml                  # Cloudflare 部署配置
-├── ARCHITECTURE-PLAN.md           # 架构演进计划（CF Workers + D1）
+├── AGENTS.md                     # AI 代理项目指令（自动加载）
+├── plans/                        # 项目计划、约定、决策记录
 └── README.md
 ```
 

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>任务管理 - MakeX Inspire 成绩统计系统</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+    <script src="../js/shared.js"></script>
+    <script src="../js/shared_indexdb.js"></script>
+    <script src="../js/header.js"></script>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">🏅 新增任务</span>
+            </div>
+            <div class="form-row">
+                <input type="text" id="taskNameInput" class="input-full" placeholder="输入任务名称" maxlength="20" autocomplete="off" />
+                <select id="taskTypeSelect">
+                    <option value="basic">基本功</option>
+                    <option value="challenge">挑战类</option>
+                </select>
+                <input type="number" id="taskMaxScoreInput" placeholder="满分" min="0" max="999" step="1"
+                    style="width:80px;padding:0.5rem 0.6rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;text-align:center;appearance:textfield;-moz-appearance:textfield;" />
+                <button class="btn btn-primary" id="addTaskBtn">➕ 添加</button>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">📋 全部任务 (<span id="taskCount">0</span>)</span>
+            </div>
+            <div id="taskList"></div>
+        </div>
+    </div>
+
+    <!-- Modal: 编辑任务 -->
+    <div class="modal-overlay" id="editTaskModal">
+        <div class="modal-box">
+            <h3>✏️ 编辑任务</h3>
+            <div class="form-group">
+                <label>任务名称</label>
+                <input type="text" id="editTaskNameInput" class="input-full" placeholder="任务名称" maxlength="20" />
+            </div>
+            <div class="form-group">
+                <label>任务类别</label>
+                <select id="editTaskTypeSelect" style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;background:#fff;color:var(--gray-800);">
+                    <option value="basic">基本功</option>
+                    <option value="challenge">挑战类</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>满分</label>
+                <input type="number" id="editTaskMaxScoreInput" placeholder="留空则不限制" min="0" max="999" step="1"
+                    style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;appearance:textfield;-moz-appearance:textfield;" />
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="editTaskCancel">取消</button>
+                <button class="btn btn-primary" id="editTaskConfirm">确认修改</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../js/apps/tasks.js"></script>
+</body>
+</html>

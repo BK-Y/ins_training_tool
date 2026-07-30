@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>集训管理 - MakeX Inspire 成绩统计系统</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <style>
+        .score-table > thead { top: -1rem; z-index: 10; }
+        .score-table > thead th { background: #f1f5f9; }
+        .sch-item {
+            display: flex; align-items: center; gap: 0.3rem;
+            padding: 0.2rem 0.25rem; border-radius: 4px;
+            font-size: 0.8rem; cursor: default;
+        }
+        .sch-item.sch-done { opacity: 0.55; }
+        .sch-item .sch-num {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: #dbeafe; color: #2563eb; font-size: 0.6rem; font-weight: 700;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <script src="../js/shared.js"></script>
+    <script src="../js/shared_indexdb.js"></script>
+    <script src="../js/analysis.js"></script>
+    <script src="../js/schedule.js"></script>
+    <script src="../js/header.js"></script>
+
+    <div class="container">
+        <div class="card" style="padding-bottom:0.5rem;">
+            <div id="trainingList"></div>
+        </div>
+    </div>
+
+    <!-- Modal: 新建集训 -->
+    <div class="modal-overlay" id="trainingModal">
+        <div class="modal-box" style="max-width:640px;">
+            <h3 id="trainingModalTitle">📋 新建集训</h3>
+            <div class="form-group">
+                <label>集训名称</label>
+                <input type="text" id="trainingNameInput" class="input-full" placeholder="例如：第一期集训" maxlength="30" />
+            </div>
+            <div class="form-group">
+                <label>日期</label>
+                <input type="date" id="trainingDateInput" />
+            </div>
+            <div class="form-group">
+                <label>选择任务并指定轮次</label>
+                <div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:0.4rem;">
+                    在 <a href="tasks.html" style="color:var(--primary);">任务管理</a> 中新增/删除任务
+                </div>
+                <div id="trainingTaskRounds"></div>
+            </div>
+            <div class="form-group">
+                <label>选择参与学员</label>
+                <div class="student-picker">
+                    <div class="student-picker-col">
+                        <div class="student-picker-header">
+                            <span>✅ 参赛学员</span>
+                            <span class="student-picker-count" id="selectedCount">0 人</span>
+                        </div>
+                        <div class="student-picker-list" id="selectedStudentList"></div>
+                    </div>
+                    <div class="student-picker-divider"></div>
+                    <div class="student-picker-col">
+                        <div class="student-picker-header">
+                            <span>📋 全部学员</span>
+                            <select id="trainingStudentGroupFilter" class="student-picker-filter">
+                                <option value="">🏫 全部班级</option>
+                            </select>
+                        </div>
+                        <div class="student-picker-list" id="allStudentList"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="trainingModalCancel">取消</button>
+                <button class="btn btn-primary" id="trainingModalConfirm">确认创建</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 新增记录 -->
+    <div class="modal-overlay" id="mockModal">
+        <div class="modal-box">
+            <h3>📝 新增记录</h3>
+            <div class="form-group">
+                <label>记录类型</label>
+                <select id="competitionTypeSelect" style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;background:#fff;color:var(--gray-800);">
+                    <option value="mock">🏅 模拟赛</option>
+                    <option value="official">🏆 正赛</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>选择任务并指定轮次</label>
+                <div style="font-size:0.8rem;color:var(--gray-500);margin-bottom:0.4rem;">
+                    在 <a href="tasks.html" style="color:var(--primary);">任务管理</a> 中新增/删除任务
+                </div>
+                <div id="mockTaskRounds"></div>
+            </div>
+            <div class="form-group">
+                <label>记录名称</label>
+                <input type="text" id="mockNameInput" class="input-full" placeholder="例如：第1轮" maxlength="30" />
+            </div>
+            <div class="form-group">
+                <label>日期</label>
+                <input type="date" id="mockDateInput" />
+            </div>
+            <div class="form-row" style="display:flex;gap:1rem;">
+                <div class="form-group" style="flex:1;">
+                    <label>组别</label>
+                    <select id="mockGroupSelect" style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;background:#fff;color:var(--gray-800);">
+                        <option value="senior">🏆 小高组</option>
+                        <option value="junior">🥉 小低组</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex:1;">
+                    <label>最终参赛人数</label>
+                    <input type="number" id="mockParticipantCount" min="1" max="999" style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;box-sizing:border-box;" placeholder="可选" />
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="mockModalCancel">取消</button>
+                <button class="btn btn-primary" id="mockModalConfirm">确认添加</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 成绩录入 -->
+    <div class="modal-overlay" id="scoreEntryModal">
+        <div class="modal-box" style="max-width:1150px;max-height:88vh;">
+            <div id="scoreEntryContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal: 导入练习成绩 -->
+    <div class="modal-overlay" id="importPracticeModal">
+        <div class="modal-box" style="max-width:600px;">
+            <h3>📥 导入练习成绩</h3>
+            <div style="font-size:0.85rem;color:var(--gray-500);margin-bottom:0.75rem;line-height:1.7;">
+                从 Excel 复制数据粘贴到下方文本框，每行一条记录。<br>
+                格式：<code>学员姓名, 任务名称, 得分, 用时(秒), 日期</code><br>
+                用时和日期可选，日期默认今天。
+            </div>
+            <div style="font-size:0.8rem;color:var(--gray-400);margin-bottom:0.5rem;">示例：</div>
+            <pre style="font-size:0.78rem;color:var(--gray-500);background:var(--gray-50);padding:0.5rem;border-radius:4px;margin-bottom:0.75rem;white-space:pre-wrap;">张三, 基础任务, 85, 12.3, 2026-07-09
+李四, 基础任务, 90, 11.5
+王五, 挑战任务A, 72, 15.8, 2026-07-08</pre>
+            <textarea id="importPracticeCsv" style="width:100%;height:180px;padding:0.6rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.85rem;font-family:inherit;resize:vertical;" placeholder="在此粘贴数据..."></textarea>
+            <div id="importPracticeResult" style="font-size:0.85rem;margin-top:0.5rem;min-height:1.2rem;"></div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="importPracticeCancel">取消</button>
+                <button class="btn btn-primary" id="importPracticeConfirm">📥 导入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: 学员详情 -->
+    <div class="modal-overlay" id="studentDetailModal">
+        <div class="modal-box" style="max-width:900px;max-height:85vh;">
+            <div id="studentDetailContent"></div>
+        </div>
+    </div>
+
+    <!-- Modal: 编辑练习记录 -->
+    <div class="modal-overlay" id="editPracticeModal">
+        <div class="modal-box" style="max-width:420px;">
+            <h3>✏️ 编辑练习记录</h3>
+            <input type="hidden" id="editPracticeRecordId" />
+            <div class="form-group">
+                <label>日期</label>
+                <input type="date" id="editPracticeDate" style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;" />
+            </div>
+            <div class="form-group">
+                <label>任务</label>
+                <select id="editPracticeTask" style="width:100%;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;"></select>
+            </div>
+            <div class="form-group">
+                <label>轮次 #</label>
+                <input type="number" id="editPracticeRound" min="1" max="99" style="width:80px;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;" />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>得分</label>
+                    <input type="number" id="editPracticeScore" min="0" max="999" step="1" style="width:100px;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;" />
+                </div>
+                <div class="form-group">
+                    <label>用时(秒)</label>
+                    <input type="number" id="editPracticeTime" min="0" step="0.001" style="width:110px;padding:0.5rem 0.85rem;border:1px solid var(--gray-300);border-radius:var(--radius-sm);font-size:0.9rem;" placeholder="可选" />
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="editPracticeCancel">取消</button>
+                <button class="btn btn-danger btn-sm" id="editPracticeDelete" style="margin-right:auto;">🗑️ 删除</button>
+                <button class="btn btn-primary" id="editPracticeConfirm">💾 保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="../js/apps/training.js"></script>
+</body>
+</html>

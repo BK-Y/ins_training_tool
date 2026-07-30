@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DB Manager — STS_DB 开发者工具</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; }
+        body { font-family: Menlo, Consolas, monospace; background: #1e1e2e; color: #cdd6f4; padding: 1.5rem; max-width: 960px; margin: 0 auto; }
+        h1 { font-size: 1.1rem; color: #cba6f7; margin-bottom: 0.25rem; }
+        .sub { font-size: 0.75rem; color: #6c7086; margin-bottom: 1.5rem; }
+        .card { background: #313244; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+        .card-title { font-size: 0.85rem; font-weight: 600; color: #89b4fa; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+        th { text-align: left; padding: 0.4rem 0.6rem; background: #45475a; color: #bac2de; font-weight: 600; }
+        td { padding: 0.35rem 0.6rem; border-top: 1px solid #45475a; word-break: break-all; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+        tr:hover { background: #363850; }
+        .btn { padding: 0.3rem 0.8rem; border: 1px solid #585b70; background: #45475a; color: #cdd6f4; border-radius: 5px; cursor: pointer; font-size: 0.75rem; font-family: inherit; }
+        .btn:hover { background: #585b70; }
+        .btn-danger { background: #e5534b33; border-color: #e5534b; color: #e5534b; }
+        .btn-danger:hover { background: #e5534b55; }
+        .badge { display: inline-block; padding: 0.1rem 0.45rem; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+        .badge-ok { background: #a6e3a133; color: #a6e3a1; }
+        .badge-old { background: #f38ba833; color: #f38ba8; }
+        .log { background: #181825; padding: 0.6rem 0.8rem; border-radius: 6px; font-size: 0.75rem; margin-top: 0.75rem; white-space: pre-wrap; line-height: 1.5; max-height: 200px; overflow-y: auto; }
+        .flex-row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    </style>
+</head>
+<body>
+    <h1>🗄️ STS_DB Manager</h1>
+    <p class="sub">开发者工具 — 上线时可移除整个 tools/ 目录</p>
+
+    <div class="card">
+        <div class="card-title">📊 数据库信息</div>
+        <div id="dbInfo">🔍 检测中...</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">✅ Schema 校验
+            <span style="font-weight:400;font-size:0.7rem;color:#6c7086;">(运行时预期 vs 实际)</span>
+        </div>
+        <div id="schemaCheck">🔍 检测中...</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📋 表结构
+            <button class="btn" id="refreshBtn">🔄 刷新</button>
+        </div>
+        <div id="tableList">🔍 检测中...</div>
+    </div>
+
+    <script>
+        // ... (db-manager JS logic unchanged)
+    </script>
+</body>
+</html>
