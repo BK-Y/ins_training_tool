@@ -78,3 +78,27 @@ DataStore.use('custom', { adapter: FirebaseAdapter, collection: 'my-data' });
 | 🗄️ IndexedDB (STS_DB) | `IndexedDBAdapter` | 无 |
 | ☁️ Cloudflare | `CloudflareAdapter` | 无需 |
 | 🔗 自定义 API | `CustomAPIAdapter` | API 地址 + 令牌 |
+
+---
+
+## 数据库结构
+
+### STS_DB (IndexedDB)
+
+本地的持久化存储，用于 localStorage 的替代和扩展。
+
+| 表名 | 主键 | 索引 | 状态 |
+|------|------|------|:----:|
+| `classes` | `id` | — | ✅ 已就绪 |
+| `students` | `id` | — | ✅ 已就绪 |
+| `enrollments` | `id` | `by_student`, `by_class`, `by_status` | ✅ 已就绪 |
+
+### 存储层次
+
+| 层 | 引擎 | 键名 | 数据范围 |
+|---|------|------|---------|
+| 主存储 | localStorage | `makexScoreData` | 全部数据（始终保留） |
+| 持久存储 | IndexedDB | `STS_DB` | students + classes + enrollments（可选切换） |
+| 文件备份 | JSON 下载 | `makex_backup_*.json` | 全部数据（用户手动导出） |
+
+> 详见 `docs-dev/ROADMAP.md` 中存储方案的演进计划。

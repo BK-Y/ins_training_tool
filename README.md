@@ -72,25 +72,26 @@ github pages部署处于过渡期，项目具体内容基本不在提供更新�
 
 #### 自动化部署（GitHub Actions）
 
-每次向 `main` 分支推送代码时，GitHub Actions 自动触发部署到 Cloudflare Pages。
+项目提供自动化部署方案： 每次向 `main` 分支推送代码时，GitHub Actions 自动触发部署到 Cloudflare Pages。
 
 工作流文件：`.github/workflows/deploy.yml`
 
 **首次部署前准备**
 
 1. **创建 Cloudflare API Token**
+
    - 登录 Cloudflare Dashboard → [API Tokens](https://dash.cloudflare.com/profile/api-tokens)
    - 创建 Token → 选择 **Cloudflare Pages** 模板
    - 权限：`Cloudflare Pages:Edit`
    - 复制生成的 token
-
 2. **添加到 GitHub Secrets**
+
    - 仓库 Settings → Secrets and variables → Actions
    - 新建 Repository secret
    - Name: `CLOUDFLARE_API_TOKEN`
    - Value: 粘贴上一步的 token
-
 3. **在 Cloudflare 创建 Pages 项目（可选）**
+
    - 如果尚未创建，首次部署时 wrangler 会自动创建
    - 项目名称需与 `wrangler.toml` 中的 `name` 一致：`ins-tools`
 
@@ -106,7 +107,7 @@ GitHub 仓库 → Actions 标签页 → 点击最新运行 → 查看部署日�
 - GitHub Actions → 选择之前的成功运行 → **Re-run job**
 - 或 Cloudflare Dashboard → Pages → `ins-tools` → **Deployments** → 选择版本部署
 
-### 部署状态查看
+#### 部署状态查看
 
 ```
 GitHub 仓库 → Actions 标签页
@@ -118,7 +119,7 @@ GitHub 仓库 → Actions 标签页
 成功后访问 https://ins-tools.pages.dev/
 ```
 
-### 回滚
+#### 回滚
 
 如需回滚到上一版本：
 
@@ -127,11 +128,11 @@ GitHub 仓库 → Actions 标签页
 
 ---
 
-## ⚙️ Cloudflare Pages 配置说明
+#### ⚙️ Cloudflare Pages 配置说明
 
 项目根目录包含三个 Cloudflare Pages 配置文件，仅 Cloudflare 读取，不影响 GitHub Pages。
 
-### `_headers` — HTTP 响应头
+##### `_headers` — HTTP 响应头
 
 ```txt
 /src/*
@@ -148,7 +149,7 @@ GitHub 仓库 → Actions 标签页
 | `Referrer-Policy`                 | 控制 HTTP Referer 头的发送范围         | 隐私相关，一般无需修改                         |
 | `Permissions-Policy`              | 限制浏览器 API 权限（摄像头/麦克风等） | 根据需求调整                                   |
 
-### `_routes.json` — 路由规则
+##### `_routes.json` — 路由规则
 
 ```json
 { "version": 1, "include": ["/*"], "exclude": [] }
@@ -171,7 +172,7 @@ GitHub 仓库 → Actions 标签页
 
 然后在 Cloudflare Dashboard 中创建 Workers 路由 `/api/*` → 你的 Worker。
 
-### `wrangler.toml` — 构建配置
+##### `wrangler.toml` — 构建配置
 
 ```toml
 name = "ins-tools"
@@ -185,7 +186,7 @@ pages_build_output_dir = "src"
 | `compatibility_date`     | Workers 运行时兼容性日期  | 更新 SDK 时同步更新                 |
 | `pages_build_output_dir` | 部署的目录路径            | 如需部署整个仓库根目录，改为`"."` |
 
-### 规划中：Cloudflare Pages + Workers + D1
+##### 规划中：Cloudflare Pages + Workers + D1
 
 正在逐步迁移到 Cloudflare 架构，以实现：
 
@@ -198,14 +199,15 @@ pages_build_output_dir = "src"
 
 ---
 
-## 📊 排名规则
+## 📊 项目约定
 
 ### 基本概念
 
 每条**记录**（模拟赛/正赛）包含多个**任务**，每个任务可进行多**轮**比赛。
 每轮比赛中，每名学员获得一个**得分**和一个**用时**。
 
-### 第一条：最终成绩
+### 排名规则
+#### 第一条：最终成绩
 
 **最终成绩 = 各任务最佳成绩之和**
 
@@ -214,7 +216,7 @@ pages_build_output_dir = "src"
 - **最终得分** = 所有任务最佳得分之和
 - **最终用时** = 所有任务最佳用时之和（仅记录最佳成绩对应的用时）
 
-### 第二条：最佳成绩确定
+#### 第二条：最佳成绩确定
 
 同一任务在不同轮次中：
 
@@ -225,7 +227,7 @@ pages_build_output_dir = "src"
 
 即：同一任务有多轮成绩时，取得分最高的那一轮；若得分相同，取用时最短的那一轮。
 
-### 第三条：最终排名
+#### 第三条：最终排名
 
 所有学员按最终成绩排序：
 
@@ -234,7 +236,7 @@ pages_build_output_dir = "src"
 | ① 先比最终得分             | **得分越高，排名越靠前** | 总分180 > 总分170     |
 | ② 最终得分相同时比最终用时 | **用时越短，排名越靠前** | 180分/25s > 180分/28s |
 
-### 示例
+#### 示例
 
 集训「第一期」有任务 A（2轮）和任务 B（1轮）：
 
@@ -250,23 +252,9 @@ pages_build_output_dir = "src"
 
 ---
 
-## 🗄️ STS_DB 数据库结构
+## 🏗️ 架构与数据库
 
-IndexedDB 数据库 `STS_DB` 包含以下表：
-
-| 表名            | 主键   | 索引                                        | 状态      |
-| --------------- | ------ | ------------------------------------------- | --------- |
-| `classes`     | `id` | —                                          | ✅ 已就绪 |
-| `students`    | `id` | —                                          | ✅ 已就绪 |
-| `enrollments` | `id` | `by_student`, `by_class`, `by_status` | ✅ 已就绪 |
-
-### 存储层次
-
-| 层       | 引擎         | 键名                    | 数据范围                                     |
-| -------- | ------------ | ----------------------- | -------------------------------------------- |
-| 主存储   | localStorage | `makexScoreData`      | 全部数据（始终保留）                         |
-| 持久存储 | IndexedDB    | `STS_DB`              | students + classes + enrollments（可选切换） |
-| 文件备份 | JSON 下载    | `makex_backup_*.json` | 全部数据（用户手动导出）                     |
+详见 `docs-dev/ARCHITECTURE.md`（StorageAdapter 设计、IndexedDB 存储结构等）。
 
 ---
 
