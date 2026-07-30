@@ -70,6 +70,52 @@ src/
 
 ---
 
+## 🚀 CI/CD 部署
+
+### GitHub Actions → Cloudflare Pages
+
+每次向 `main` 分支推送代码时，GitHub Actions 自动触发部署到 Cloudflare Pages。
+
+工作流文件：`.github/workflows/deploy.yml`
+
+### 首次部署前准备
+
+**1. 创建 Cloudflare API Token**
+- 登录 Cloudflare Dashboard → [API Tokens](https://dash.cloudflare.com/profile/api-tokens)
+- 创建 Token → 选择 **Cloudflare Pages** 模板
+- 权限：`Cloudflare Pages:Edit`
+- 复制生成的 token
+
+**2. 添加到 GitHub Secrets**
+- 仓库 Settings → Secrets and variables → Actions
+- 新建 Repository secret
+- Name: `CLOUDFLARE_API_TOKEN`
+- Value: 粘贴上一步的 token
+
+**3. 在 Cloudflare 创建 Pages 项目（可选）**
+- 如果尚未创建，首次部署时 wrangler 会自动创建
+- 项目名称需与 `wrangler.toml` 中的 `name` 一致：`ins-tools`
+
+### 部署状态查看
+
+```
+GitHub 仓库 → Actions 标签页
+  ↓
+点击最新 workflow 运行
+  ↓
+查看部署日志
+  ↓
+成功后访问 https://ins-tools.pages.dev/
+```
+
+### 回滚
+
+如需回滚到上一版本：
+- GitHub Actions → 选择之前的成功运行 → **Re-run job**
+- 或 Cloudflare Dashboard → Pages → `ins-tools` → **Deployments** → 选择版本部署
+
+---
+
 ## ⚙️ Cloudflare Pages 配置说明
 
 项目根目录包含三个 Cloudflare Pages 配置文件，仅 Cloudflare 读取，不影响 GitHub Pages。
