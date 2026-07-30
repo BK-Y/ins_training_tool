@@ -4,6 +4,13 @@
 
 ---
 
+## 2026-07-30 (CI Fix)
+
+### 修复
+- `.github/workflows/deploy.yml` — 添加 `accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}`，修复 Cloudflare Pages 部署时因缺少 `accountId` 导致 Wrangler 调用 `/memberships` 接口失败（HTTP 400, code 9106）的认证错误。需在仓库 Secrets 中配置 `CLOUDFLARE_ACCOUNT_ID` 和有效的 `CLOUDFLARE_API_TOKEN`。
+
+---
+
 ## 2026-07-30
 
 ### 新增
