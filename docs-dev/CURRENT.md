@@ -11,6 +11,7 @@
 - [x] 内联脚本拆分为 `apps/*.js`
 - [x] `index.html` 改为首页
 - [x] 项目文档重构（PLAN.md → docs-dev/ + AGENTS.md）
+- [x] `docs/admin.html` 数据备份 / 跨设备同步（localStorage 导出/导入）
 
 ---
 

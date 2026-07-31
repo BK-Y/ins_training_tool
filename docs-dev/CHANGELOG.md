@@ -4,6 +4,17 @@
 
 ---
 
+## 2026-07-31
+
+### 新增
+- `docs/admin.html` + `src/admin.html` + `src/js/apps/admin.js` — 新增「📦 数据备份 / 跨设备同步」功能
+  - **导出**：遍历 localStorage 全部键，打包为 JSON 备份文件（含 app / type / formatVersion / exportedAt 元数据）并下载
+  - **导入**：上传备份文件 → 预览（文件名、导出时间、键数量、数据量、键列表）→ 选择「整体覆盖 / 合并写入」→ 写回 localStorage 并重载数据
+  - 若备份源设备处于 IndexedDB 模式（`sts_storage_mode=idb`），导入预览会提示备份不含 STS_DB 数据
+  - `docs/` 为内联脚本版，`src/` 为 `apps/admin.js` 拆分版，两份均已同步实现并验证
+
+---
+
 ## 2026-07-30
 
 ### 新增

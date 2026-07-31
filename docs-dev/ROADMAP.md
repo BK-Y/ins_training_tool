@@ -23,6 +23,7 @@ Phase 5 ░░░░░░░░░░░░░░░░░░░░   0%  部�
 - [x] 内联脚本拆分为 `apps/*.js`
 - [x] `index.html` 改为首页（取代 stats.html 跳转）
 - [x] 更新 `README.md`
+- [x] `docs/admin.html` 数据备份 / 跨设备同步（localStorage 导出/导入）
 
 ## Phase 2 ⏳ 待开始 — Cloudflare Workers API
 
