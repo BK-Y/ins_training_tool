@@ -1,8 +1,11 @@
 name: Deploy to Cloudflare Pages
 
+# ⚠️ 自动部署到 Cloudflare 功能有问题（2026-07-31）
+# 已临时停用自动触发，防止 push master 时自动执行部署。
+# 当前仅支持手动触发（Actions 页面点 Run workflow）。
+# 待修复问题后恢复自动部署：将 on 改回 push 即可。
 on:
-  push:
-    branches: [master]
+  workflow_dispatch:
 
 jobs:
   deploy:

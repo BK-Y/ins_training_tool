@@ -6,7 +6,7 @@
 
 | ID | 问题 | 影响 | 状态 |
 |----|------|------|:----:|
-| — | 暂无 | — | — |
+| BUG-1 | 自动部署到 Cloudflare 功能有问题 | `.github/workflows/deploy.yml` 推送 master 会自动部署，可能把异常版本发布到线上 | 🟡 待推进 — 已临时停用自动触发，改为手动 `workflow_dispatch`，修复后恢复 |
 
 ## 🟡 一般
 
