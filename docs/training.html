@@ -1165,6 +1165,8 @@
             document.getElementById('scoreEntryModal').classList.remove('open');
             this._scoreEntryTrainingId = null;
             this._scoreEntryMockId = null;
+            // 关闭后刷新主内容，确保模拟赛成绩/排名等数据即时更新（无需手动刷新页面）
+            this.render();
         },
 
         renderScoreEntry() {

@@ -754,6 +754,48 @@ select:focus {
 .mig-badge.old { background: #fee2e2; color: #b91c1c; }
 .mig-badge.missing { background: #fee2e2; color: #b91c1c; }
 
+/* ========== Changelog ========== */
+.changelog-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+.changelog-item:last-child {
+    border-bottom: none;
+}
+.changelog-date {
+    font-size: 0.78rem;
+    color: var(--gray-400);
+    white-space: nowrap;
+    padding-top: 0.15rem;
+    min-width: 5.5rem;
+}
+.changelog-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.12rem 0.5rem;
+    border-radius: 10px;
+    white-space: nowrap;
+    margin-top: 0.1rem;
+}
+.changelog-body {
+    flex: 1;
+    min-width: 0;
+}
+.changelog-title {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--gray-800);
+}
+.changelog-desc {
+    font-size: 0.82rem;
+    color: var(--gray-500);
+    margin-top: 0.15rem;
+    line-height: 1.5;
+}
+
 /* ========== Training List ========== */
 .training-list {
     display: flex;
